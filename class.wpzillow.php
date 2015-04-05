@@ -35,7 +35,7 @@
             $err = false;
             $msg = '';
             $serviceErrs = array(1,2,3,4);
-            $inputErrs = array(500,501,502,503,504,505,506,507);
+            $inputErrs = array(500,501,502,503,504,505,506,507,508);
             $resCode = $res->message->code;
             
             if(in_array($resCode,$serviceErrs)){
@@ -55,7 +55,7 @@
         }
         
         private function errOutput($err){
-            return str_replace('{{zillowerr}}',$err,$this.errTemplate);
+            return str_replace('{{zillowerr}}',$err,$this->errTemplate);
         }
         
         public function setZpid($atts){
@@ -99,7 +99,7 @@
             $errs = $this->checkErrs($result);
             
             if($errs[0]==true){
-                $output = errOutput($errs[1]);
+                $output = $this->errOutput($errs[1]);
             }
             else{
                 require_once('templates/getSearchResults.php');
@@ -129,7 +129,7 @@
             $errs = $this->checkErrs($result);
             
             if($errs[0]==true){
-                $output = errOutput($errs[1]);
+                $output = $this->errOutput($errs[1]);
             }
             else{
                 require_once('templates/getComps.php');
@@ -158,6 +158,10 @@
             return $this->dohttp($apiurl);
         }
         
+        public function doPropertySearch(){
+            
+        }
+        
         public function init($wsid){
             
             $this->zwsid = $wsid;
@@ -176,7 +180,7 @@
         
     }
     
-    function wpzillow_shortcodes($atts){
+    function wpzillowbs_shortcodes($atts){
         //$atts = shortcode attributes
         //[zillow-data method="getSearchResults" city="" state="" zip=""]
         
@@ -199,9 +203,49 @@
         
     }
     
-    function wpzillow_search(){
+    global $wp_zillow_bs_results;
+    $wp_zillow_bs_results = '';
+
+    function wp_zillowbs_doPropertySearch($content){
     
+        if ( !isset($_POST['wp_zillow_bs_search']) ) return;
         
+        //if( !wp_verify_nonce( $_REQUEST['zillowsearch'], 'zillowsearch' ) ){
+                
+          //  wp_nonce_ays();
+             
+        //}
+        
+        $err = '';
+        
+        global $wp_zillow_bs_results;
+        
+        $address  = ( isset($_POST['wp_zillow_bs_address']) )  ? trim(strip_tags($_POST['wp_zillow_bs_address'])) : null;
+        $city = ( isset($_POST['wp_zillow_bs_city']) )  ? trim(strip_tags($_POST['wp_zillow_bs_city'])) : null;
+        $zip = ( isset($_POST['wp_zillow_bs_zip']) )  ? trim(strip_tags($_POST['wp_zillow_bs_zip'])) : null;
+        
+        if($address == '' || $city == ''){
+            $err = 'Address and City are required to search Zillow.';
+            wp_die($err);
+        }
+        
+        $data = array(
+            'method' => 'getSearchResults',
+            'address' => $address,
+            'city' => $city,
+            'state' => 'FL',
+            'zip' => $zip
+        );
+        
+        $wp_zillow_bs_results = wpzillowbs_shortcodes($data);
+        
+    }
+
+    function wp_zillowbs_showPropertySearch(){
+        
+        global $wp_zillow_bs_results;
+        
+        echo ( $wp_zillow_bs_results );
         
     }
 
