@@ -45,7 +45,7 @@ require_once('class.wpzillow.php');
 //X1-ZWz1e1v29k9jwr_7q4l5
  
 function wp_zillowbs_register_shortcode() {
-    add_shortcode( 'zillow-data', 'wpzillow_start' );
+    add_shortcode( 'zillow-data', 'wpzillow_shortcodes' );
 }
 //[zillow-data method="getSearchResults" city="" state="" zip=""]
 add_action( 'init', 'wp_zillowbs_register_shortcode' );
