@@ -34,6 +34,8 @@ define( 'WPZILLOW__MINIMUM_WP_VERSION', '3.1' );
 define( 'WPZILLOW__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPZILLOW__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
+define( 'WPZILLOWBS_TEMPLATESTR', '{{zillowdata}}');
+
 //register_activation_hook( __FILE__, 'init' );
 
 //add_action( 'init', array( 'wp-zillow', 'init' ) );
