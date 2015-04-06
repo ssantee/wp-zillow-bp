@@ -2,9 +2,17 @@
     
     function wp_zillowbs_errorTemplate(){
         
-        $markup = '<!-- {{zillowerr}} -->';
+        $errStr = WPZILLOWBS_ERRSTR;
         
-        return $markup;
+        $template = <<<EOT
+            <h2>Sorry</h2>
+            <p class="text-error">
+                {$errStr}
+            </p>
+            
+EOT;
+    
+        return $template;
+        
     }
-
 ?>

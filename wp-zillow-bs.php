@@ -35,6 +35,7 @@ define( 'WPZILLOW__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPZILLOW__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 define( 'WPZILLOWBS_TEMPLATESTR', '{{zillowdata}}');
+define( 'WPZILLOWBS_ERRSTR', '{{zillowerr}}');
 
 //register_activation_hook( __FILE__, 'init' );
 
@@ -47,7 +48,7 @@ require_once('class.wpzillow.php');
 //X1-ZWz1e1v29k9jwr_7q4l5
  
 function wp_zillowbs_register_shortcode() {
-    add_shortcode( 'zillow-data', 'wpzillowbs_shortcodes' );
+    add_shortcode( 'zillow-data', 'wp_zillowbs_shortcodes' );
 }
 //[zillow-data method="getSearchResults" city="" state="" zip=""]
 add_action( 'init', 'wp_zillowbs_register_shortcode' );

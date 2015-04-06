@@ -55,7 +55,7 @@
         }
         
         private function errOutput($err){
-            return str_replace('{{zillowerr}}',$err,$this->errTemplate);
+            return str_replace(WPZILLOWBS_ERRSTR,$err,$this->errTemplate);
         }
         
         public function setZpid($atts){
@@ -180,7 +180,7 @@
         
     }
     
-    function wpzillowbs_shortcodes($atts){
+    function wp_zillowbs_shortcodes($atts){
         //$atts = shortcode attributes
         //[zillow-data method="getSearchResults" city="" state="" zip=""]
         
@@ -204,7 +204,10 @@
     }
     
     global $wp_zillow_bs_results;
+    global $wp_zillow_bs_errs;
+
     $wp_zillow_bs_results = '';
+    $wp_zillow_bs_errs = '';
 
     function wp_zillowbs_doPropertySearch($content){
     
@@ -220,25 +223,26 @@
         
         global $wp_zillow_bs_results;
         
+        global $wp_zillow_bs_errs;
+        
         $address  = ( isset($_POST['wp_zillow_bs_address']) )  ? trim(strip_tags($_POST['wp_zillow_bs_address'])) : null;
         $city = ( isset($_POST['wp_zillow_bs_city']) )  ? trim(strip_tags($_POST['wp_zillow_bs_city'])) : null;
         $zip = ( isset($_POST['wp_zillow_bs_zip']) )  ? trim(strip_tags($_POST['wp_zillow_bs_zip'])) : null;
         
-        if($address == '' || $city == ''){
-            $err = 'Address and City are required to search Zillow.';
-            wp_die($err);
+        if($address == '' || $city == '' || $zip == ''){
+            $wp_zillow_bs_errs = 'Address, City, and ZIP Code are required to search Zillow.';
         }
-        
-        $data = array(
-            'method' => 'getSearchResults',
-            'address' => $address,
-            'city' => $city,
-            'state' => 'FL',
-            'zip' => $zip
-        );
-        
-        $wp_zillow_bs_results = wpzillowbs_shortcodes($data);
-        
+        else{
+            $data = array(
+                'method' => 'getSearchResults',
+                'address' => $address,
+                'city' => $city,
+                'state' => 'FL',
+                'zip' => $zip
+            );
+
+            $wp_zillow_bs_results = wpzillowbs_shortcodes($data);
+        }
     }
 
     function wp_zillowbs_showPropertySearch(){
@@ -247,6 +251,16 @@
         
         echo ( $wp_zillow_bs_results );
         
+    }
+
+    function wp_zillowbs_showSearchErrors(){
+        
+        global $wp_zillow_bs_errs;
+        if($wp_zillow_bs_errs != ''){
+            require_once('templates/errTemplate.php');
+        
+            echo ( str_replace(WPZILLOWBS_ERRSTR,$wp_zillow_bs_errs,wp_zillowbs_errorTemplate()) );
+        }
     }
 
 ?>
