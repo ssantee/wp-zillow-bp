@@ -1,9 +1,10 @@
 <?php 
+
     function zillow_bs_tGetComps($data){
         
-        require_once('outerStructure.php');
+        require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $global = wp_zillowbs_generalMarkup();
+        $strings = wp_zillow_bs_strings();
         
         $result = $data->response->properties->comparables;
    
@@ -14,33 +15,34 @@
         foreach($result->comp as $comp){
         
         $template .= <<<EOT
-            
-            <p>
-                {$comp->address->street}<br>
-                {$comp->address->city}<br>
-                {$comp->address->state}
-            </p>
-            <ul>
-                <li>Zestimate: {$comp->zestimate->amount}</li>
-                <li>Last Updated: {$comp->zestimate->lastupdated}</li>
-                <li>Valuation Range: 
-                    <ul>
-                        <li>low: {$comp->zestimate->valuationRange->low}</li>
-                        <li>high: {$comp->zestimate->valuationRange->high}</li>
-                    </ul>
-                </li>
-            </ul>
-            <ul>
-                <li><a href="{$comp->links->homedetails}" target="_blank">Home Details</a></li>
-                <li><a href="{$comp->links->graphsanddata}" target="_blank">Graphs and Data</a></li>
-                <li><a href="{$comp->links->mapthishome}" target="_blank">Map This Home</a></li>
-                <li><a href="{$comp->links->comparables}" target="_blank">Comparables</a></li>
-            </ul>
-            
+            <div role="tabpanel" class="tab-pane" id="wpz-comps">
+                <p>
+                    {$comp->address->street}<br>
+                    {$comp->address->city}<br>
+                    {$comp->address->state}
+                </p>
+                <ul>
+                    <li>{$strings['zestimate']}: \${$comp->zestimate->amount}</li>
+                    <li>Last Updated: {$comp->zestimate->lastupdated}</li>
+                    <li>Valuation Range: 
+                        <ul>
+                            <li>low: \${$comp->zestimate->valuationRange->low}</li>
+                            <li>high: \${$comp->zestimate->valuationRange->high}</li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li><a href="{$comp->links->homedetails}" target="_blank">Home Details</a></li>
+                    <li><a href="{$comp->links->graphsanddata}" target="_blank">Graphs and Data</a></li>
+                    <li><a href="{$comp->links->mapthishome}" target="_blank">Map This Home</a></li>
+                    <li><a href="{$comp->links->comparables}" target="_blank">Comparables</a></li>
+                </ul>
+            </div>
             
 EOT;
         }
-        $toReturn = str_replace(WPZILLOWBS_TEMPLATESTR,$template,$global);
+        
+        $toReturn = $template;
         
         return $toReturn;
     }

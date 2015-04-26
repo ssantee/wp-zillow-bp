@@ -37,21 +37,29 @@ define( 'WPZILLOW__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPZILLOWBS_TEMPLATESTR', '{{zillowdata}}');
 define( 'WPZILLOWBS_ERRSTR', '{{zillowerr}}');
 
-//register_activation_hook( __FILE__, 'init' );
+global $wp_zillow_bs_gotdata;
 
-//add_action( 'init', array( 'wp-zillow', 'init' ) );
+$wp_zillow_bs_gotdata = false;
+
+//register_activation_hook( __FILE__, 'init' );
 
 require_once('class.wpzillow.php');
 
-//add_filter('the_content','wpzillow_start');
+require_once('wp-zillow-bs-admin.php');
+
 //zwsid
 //X1-ZWz1e1v29k9jwr_7q4l5
  
 function wp_zillowbs_register_shortcode() {
     add_shortcode( 'zillow-data', 'wp_zillowbs_shortcodes' );
 }
+
 //[zillow-data method="getSearchResults" city="" state="" zip=""]
 add_action( 'init', 'wp_zillowbs_register_shortcode' );
 add_action( 'init', 'wp_zillowbs_doPropertySearch' );
+
+
+
+add_action( 'wp_footer', 'wp_zillow_bs_footer' );
 
 ?>

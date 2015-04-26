@@ -112,8 +112,21 @@
         
         public function getChart($atts){
             //http://www.zillow.com/webservice/GetChart.htm
-            $apiurl = 'GetChart.htm?zpid=' . $this->zpid . '&unit-type=' . $unitType . '&width=' . $width . '&height=' . $height . '&chartDuration=' . $duration;
-            return $this->dohttp($apiurl);
+            $apiurl = 'GetChart.htm?zpid=' . $this->zpid . '&unit-type=dollar&width=200&height=200&chartDuration=5years';
+            
+            $result = $this->dohttp($apiurl);
+           
+            $errs = $this->checkErrs($result);
+            
+            if($errs[0]==true){
+                $output = $this->errOutput($errs[1]);
+            }
+            else{
+                require_once('templates/getChart.php');
+                $output = zillow_bs_tGetChart($result);
+            }
+            
+            return $output;
         }
         
         public function getComps($atts){
@@ -148,8 +161,27 @@
         
         public function getDeepSearchResults($atts){
             //http://www.zillow.com/webservice/GetDeepSearchResults.htm
-            $apiurl = 'GetDeepSearchResults.htm?$address=' . $address . '&citystatezip=' . $citystatezip . '&rentzestimate=' . $this->rentz;
-            return $this->dohttp($apiurl);
+            
+            $address = $atts['address'];
+            $citystatezip = $atts['city']. ',' . $atts['state'] . ' ' . $atts['zip'];
+            $rentz = 'false';
+            
+            $output = '';
+            
+            $apiurl = 'GetDeepSearchResults.htm?address=' . urlencode($address) . '&citystatezip=' . urlencode($citystatezip) . '&rentzestimate=' . $this->rentz;
+            $result = $this->dohttp($apiurl);
+
+            $errs = $this->checkErrs($result);
+            
+            if($errs[0]==true){
+                $output = $this->errOutput($errs[1]);
+            }
+            else{
+                require_once('templates/getDeepSearchResults.php');
+                $output = zillow_bs_tGetDeepSearchResults($result);
+            }
+            
+            return $output;
         }
         
         public function getUpdatedPropertyDetails($zpid){
@@ -176,20 +208,54 @@
             
             $this->errTemplate = wp_zillowbs_errorTemplate();
             
+            require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
+            
+            $this->strings = wp_zillow_bs_strings();
+            
         }
         
     }
     
+    function atts_are_valid($atts){
+    
+        if(!isset($atts['address']) || !isset($atts['city']) || !isset($atts['state']) || !isset($atts['zip'])){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    function wp_zillow_bs_doOuter($template){
+    
+        require_once('templates/outerStructure.php');
+        
+        $global = wp_zillowbs_generalMarkup();
+        
+        return str_replace(WPZILLOWBS_TEMPLATESTR,$template,$global);
+        
+    }
+
     function wp_zillowbs_shortcodes($atts){
         //$atts = shortcode attributes
         //[zillow-data method="getSearchResults" city="" state="" zip=""]
         
         $method = $atts['method'];
         
-        $zo = new wpzillow();
-        $zo->init('X1-ZWz1e1v29k9jwr_7q4l5');
+        $zwsid = get_option('wpzillow_zwsid');
         
-        if($method == 'getSearchResults' || $method == 'getDeepSearchResults'){
+        if(!$zwsid || !atts_are_valid($atts)){
+            exit;
+        }
+        
+        $zo = new wpzillow();
+        $zo->init($zwsid);
+        
+        if($method == 'all'){
+            $out = wp_zillowbs_shortcodes_master($atts);
+        }
+        
+        else if($method == 'getSearchResults' || $method == 'getDeepSearchResults'){
             $out = $zo->$method($atts);
         }
         else{
@@ -199,10 +265,35 @@
             $out = $zo->$method($atts);
         }
         
-        return $out;
+        global $wp_zillow_bs_gotdata;
+
+        $wp_zillow_bs_gotdata = true;
+        
+        $out = wp_zillow_bs_doOuter($out);
+        
+        return $out . wp_zillow_bs_providedby();
         
     }
     
+    function wp_zillowbs_shortcodes_master($atts){
+    
+        $zo = new wpzillow();
+        $zo->init($zwsid);
+        
+        $zo->setZpid($atts);
+         
+        $out .= $zo->getDeepSearchResults();
+        
+        global $wp_zillow_bs_gotdata;
+
+        $wp_zillow_bs_gotdata = true;
+        
+        $out = wp_zillow_bs_doOuter($out);
+        
+        return $out . wp_zillow_bs_providedby();
+    
+    }
+
     global $wp_zillow_bs_results;
     global $wp_zillow_bs_errs;
 
@@ -241,7 +332,11 @@
                 'zip' => $zip
             );
 
-            $wp_zillow_bs_results = wpzillowbs_shortcodes($data);
+            $wp_zillow_bs_results = wp_zillowbs_shortcodes($data);
+            
+            global $wp_zillow_bs_gotdata;
+
+            $wp_zillow_bs_gotdata = true;
         }
     }
 
@@ -261,6 +356,21 @@
         
             echo ( str_replace(WPZILLOWBS_ERRSTR,$wp_zillow_bs_errs,wp_zillowbs_errorTemplate()) );
         }
+    }
+
+    function wp_zillow_bs_footer(){
+        $out = '';
+        
+        global $wp_zillow_bs_gotdata;
+        
+        if($wp_zillow_bs_gotdata){
+            require_once('templates/outerStructure.php');
+            
+            $out = wp_zillow_bs_global_footer();
+            
+        }
+        
+        echo($out);
     }
 
 ?>

@@ -20,7 +20,7 @@ important notes from zillow terms
         $strings['seeMore'] = str_replace('[address]',$result->address->street,$strings['seeMore']);
         
         $template = <<<EOT
-            <div role="tabpanel" class="tab-pane" id="wpz-searchresults">
+            <div role="tabpanel" class="tab-pane active" id="wpz-deepsearchresults">
                 <h2>Zillow Search Result</h3>
                 <h3>Address</h3>
                 <p>
