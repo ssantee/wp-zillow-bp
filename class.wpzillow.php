@@ -77,6 +77,46 @@
             return $result->response->results->result->zpid;
         }
         
+        public function applyTemplate($template, $data){
+            
+            $errs = $this->checkErrs($data);
+            
+            $output = '';
+            
+            if($errs[0]==true){
+                $output = $this->errOutput($errs[1]);
+            }
+            else{
+                $templateFunction = 'zillow_bs_t' . $template;
+                
+                require_once('templates/'.$template.'.php');
+                
+                $output = $templateFunction($data);
+            }
+            
+            return $output;
+            
+        }
+        
+        public function getDeepSearchResults($atts){
+            //http://www.zillow.com/webservice/GetDeepSearchResults.htm
+            
+            $address = $atts['address'];
+            $citystatezip = $atts['city']. ',' . $atts['state'] . ' ' . $atts['zip'];
+            $rentz = 'false';
+            
+            $output = '';
+            
+            $apiurl = 'GetDeepSearchResults.htm?address=' . urlencode($address) . '&citystatezip=' . urlencode($citystatezip) . '&rentzestimate=' . $this->rentz;
+            
+            $result = $this->dohttp($apiurl);
+            
+            $this->zpid = $result->response->results->result->zpid;
+            
+            return $result;
+
+        }
+        
         public function getZestimate($atts){
             //http://www.zillow.com/webservice/GetZestimate.htm
             
@@ -91,23 +131,14 @@
             $citystatezip = $atts['city']. ',' . $atts['state'] . ' ' . $atts['zip'];
             $rentz = 'false';
             
-            $output = '';
-            
             $apiurl = 'GetSearchResults.htm?address=' . urlencode($address) . '&citystatezip=' . urlencode($citystatezip) . '&rentzestimate=' . $this->rentz;
+            
             $result = $this->dohttp($apiurl);
+            
+            $this->zpid = $result->response->results->result->zpid;
+            
+            return $result;
 
-            $errs = $this->checkErrs($result);
-            
-            if($errs[0]==true){
-                $output = $this->errOutput($errs[1]);
-            }
-            else{
-                require_once('templates/getSearchResults.php');
-                $output = zillow_bs_tGetSearchResults($result);
-            }
-            
-            return $output;
-            
         }
         
         public function getChart($atts){
@@ -137,20 +168,8 @@
             
             $apiurl = 'GetComps.htm?zpid=' . $this->zpid . '&count=' . $count . '&rentzestimate=' . $this->rentz;
             
-            $result = $this->dohttp($apiurl);
+            return $this->dohttp($apiurl);
            
-            $errs = $this->checkErrs($result);
-            
-            if($errs[0]==true){
-                $output = $this->errOutput($errs[1]);
-            }
-            else{
-                require_once('templates/getComps.php');
-                $output = zillow_bs_tGetComps($result);
-            }
-            
-            return $output;
-            
         }
         
         public function getDeepComps($atts){
@@ -159,39 +178,10 @@
             return $this->dohttp($apiurl);
         }
         
-        public function getDeepSearchResults($atts){
-            //http://www.zillow.com/webservice/GetDeepSearchResults.htm
-            
-            $address = $atts['address'];
-            $citystatezip = $atts['city']. ',' . $atts['state'] . ' ' . $atts['zip'];
-            $rentz = 'false';
-            
-            $output = '';
-            
-            $apiurl = 'GetDeepSearchResults.htm?address=' . urlencode($address) . '&citystatezip=' . urlencode($citystatezip) . '&rentzestimate=' . $this->rentz;
-            $result = $this->dohttp($apiurl);
-
-            $errs = $this->checkErrs($result);
-            
-            if($errs[0]==true){
-                $output = $this->errOutput($errs[1]);
-            }
-            else{
-                require_once('templates/getDeepSearchResults.php');
-                $output = zillow_bs_tGetDeepSearchResults($result);
-            }
-            
-            return $output;
-        }
-        
         public function getUpdatedPropertyDetails($zpid){
             //http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm
             $apiurl = 'GetUpdatedPropertyDetails.htm?zpid=' . $this->zpid;
             return $this->dohttp($apiurl);
-        }
-        
-        public function doPropertySearch(){
-            
         }
         
         public function init($wsid){
@@ -226,11 +216,25 @@
         }
     }
 
+    function queue_styles(){
+        wp_enqueue_style( 'wp-zillow-bs-css', plugins_url('',__FILE__) . '/css/wp-zillow-bs.css', array(), '1', 'all' );
+    }
+
     function wp_zillow_bs_doOuter($template){
     
         require_once('templates/outerStructure.php');
         
         $global = wp_zillowbs_generalMarkup();
+        
+        return str_replace(WPZILLOWBS_TEMPLATESTR,$template,$global);
+        
+    }
+
+    function wp_zillow_bs_doAllOuter($template, $data){
+        
+        require_once('templates/outerStructure.php');
+        
+        $global = wp_zillowbs_tabbedMarkup($data);
         
         return str_replace(WPZILLOWBS_TEMPLATESTR,$template,$global);
         
@@ -242,6 +246,9 @@
         
         $method = $atts['method'];
         
+        $data;
+        $out = '';
+        
         $zwsid = get_option('wpzillow_zwsid');
         
         if(!$zwsid || !atts_are_valid($atts)){
@@ -252,45 +259,73 @@
         $zo->init($zwsid);
         
         if($method == 'all'){
-            $out = wp_zillowbs_shortcodes_master($atts);
+            $allResults = wp_zillowbs_shortcodes_master($atts);
+            
+            $out = $allResults['template'];
+            
+            $data = $allResults['data'];
+       
         }
         
-        else if($method == 'getSearchResults' || $method == 'getDeepSearchResults'){
-            $out = $zo->$method($atts);
-        }
-        else{
+        else if($method !== 'getSearchResults' && $method !== 'getDeepSearchResults'){
             //must get zpid first
             $zo->setZpid($atts);
-         
-            $out = $zo->$method($atts);
+            
+            $data = $zo->$method($atts);
+            
+            $out = $zo->applyTemplate($method, $data);
+            
+        }
+        else{
+            $data = $zo->$method($atts);
+            
+            $out = $zo->applyTemplate($method, $data);
+            
+            $out = wp_zillow_bs_doOuter($out);
         }
         
         global $wp_zillow_bs_gotdata;
 
         $wp_zillow_bs_gotdata = true;
         
-        $out = wp_zillow_bs_doOuter($out);
+        queue_styles();
         
-        return $out . wp_zillow_bs_providedby();
+        return $out; //. wp_zillow_bs_providedby();
         
     }
     
     function wp_zillowbs_shortcodes_master($atts){
     
+        $zwsid = get_option('wpzillow_zwsid');
+        
         $zo = new wpzillow();
         $zo->init($zwsid);
         
-        $zo->setZpid($atts);
-         
-        $out .= $zo->getDeepSearchResults();
+        $data;
+        $out = '';
         
-        global $wp_zillow_bs_gotdata;
-
-        $wp_zillow_bs_gotdata = true;
+        //search data is special instance of data because it 
+        //is used more than once in the templates
+        //it gets its own var
+        $searchData = $zo->getDeepSearchResults($atts);
         
-        $out = wp_zillow_bs_doOuter($out);
+        $out .= $zo->applyTemplate('getDeepSearchResults',$searchData);
         
-        return $out . wp_zillow_bs_providedby();
+        $data = $zo->getComps($atts);
+        
+        $out .= $zo->applyTemplate('getComps',$data);
+        
+        $out = wp_zillow_bs_doAllOuter($out, $searchData);
+        
+        //$out = $zo->applyTemplate('sectionHeader',$searchData) . $out;
+     
+        //getSearchResults or getDeepSearchResults will set the zpid
+        //if called before other methods, make sure here
+        if(!$zo->zpid){
+            $zo->setZpid($atts);
+        }
+        
+        return Array('template'=>$out, 'data'=>$searchData);
     
     }
 
@@ -325,7 +360,7 @@
         }
         else{
             $data = array(
-                'method' => 'getSearchResults',
+                'method' => 'getDeepSearchResults',
                 'address' => $address,
                 'city' => $city,
                 'state' => 'FL',

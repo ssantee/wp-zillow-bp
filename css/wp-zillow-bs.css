@@ -1,0 +1,30 @@
+.zillow-data{
+    box-sizing: border-box;
+    padding:20px;
+    width:100%;
+    
+    border: 1px solid #ddd;
+}
+.zillow-data .row{
+    margin:0;
+}
+.zillow-data .nav-tabs{
+    padding:0;
+    margin:0;
+}
+
+.wp-z-bs-section{
+    
+}
+
+.zillow-data .wp-z-bs-section ul{
+    margin:0;
+}
+
+.zillow-data li{
+    list-style: none;
+}
+
+.provided-by-zillow{
+    text-align: center;
+}

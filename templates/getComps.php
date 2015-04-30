@@ -1,6 +1,6 @@
 <?php 
 
-    function zillow_bs_tGetComps($data){
+    function zillow_bs_tgetComps($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
@@ -10,33 +10,36 @@
    
         $numResults = $result->count();
         
-        $template = '<h2>Zillow Comparable Recent Sales</h3>';
+        $template = '';
         
         foreach($result->comp as $comp){
         
         $template .= <<<EOT
             <div role="tabpanel" class="tab-pane" id="wpz-comps">
-                <p>
-                    {$comp->address->street}<br>
-                    {$comp->address->city}<br>
-                    {$comp->address->state}
-                </p>
-                <ul>
-                    <li>{$strings['zestimate']}: \${$comp->zestimate->amount}</li>
-                    <li>Last Updated: {$comp->zestimate->lastupdated}</li>
-                    <li>Valuation Range: 
-                        <ul>
-                            <li>low: \${$comp->zestimate->valuationRange->low}</li>
-                            <li>high: \${$comp->zestimate->valuationRange->high}</li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li><a href="{$comp->links->homedetails}" target="_blank">Home Details</a></li>
-                    <li><a href="{$comp->links->graphsanddata}" target="_blank">Graphs and Data</a></li>
-                    <li><a href="{$comp->links->mapthishome}" target="_blank">Map This Home</a></li>
-                    <li><a href="{$comp->links->comparables}" target="_blank">Comparables</a></li>
-                </ul>
+                <div class="wp-z-bs-section span4 clearfix">
+                    <h3>Zillow Comparable Recent Sales</h3>
+                    <p>
+                        {$comp->address->street}<br>
+                        {$comp->address->city}<br>
+                        {$comp->address->state}
+                    </p>
+                    <ul>
+                        <li>{$strings['zestimate']}: \${$comp->zestimate->amount}</li>
+                        <li>Last Updated: {$comp->zestimate->lastupdated}</li>
+                        <li>Valuation Range: 
+                            <ul>
+                                <li>low: \${$comp->zestimate->valuationRange->low}</li>
+                                <li>high: \${$comp->zestimate->valuationRange->high}</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li><a href="{$comp->links->homedetails}" target="_blank">Home Details</a></li>
+                        <li><a href="{$comp->links->graphsanddata}" target="_blank">Graphs and Data</a></li>
+                        <li><a href="{$comp->links->mapthishome}" target="_blank">Map This Home</a></li>
+                        <li><a href="{$comp->links->comparables}" target="_blank">Comparables</a></li>
+                    </ul>
+                </div>
             </div>
             
 EOT;

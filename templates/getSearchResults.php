@@ -9,7 +9,7 @@ important notes from zillow terms
     
 */
 
-    function zillow_bs_tGetSearchResults($data){
+    function zillow_bs_tgetSearchResults($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         

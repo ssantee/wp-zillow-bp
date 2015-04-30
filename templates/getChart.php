@@ -1,6 +1,6 @@
 <?php 
 
-    function zillow_bs_tGetChart($data){
+    function zillow_bs_tgetChart($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
