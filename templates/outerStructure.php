@@ -47,8 +47,8 @@ EOT;
                         {$result->address->street}, 
                         {$result->address->city} 
                         {$result->address->state} 
-                        latitude: {$result->address->latitude} 
-                        longitude: {$result->address->longitude}<br>
+                        <!--latitude: {$result->address->latitude} 
+                        longitude: {$result->address->longitude}<br>-->
                     </p>
                 </div>
                 {$provBy} 
