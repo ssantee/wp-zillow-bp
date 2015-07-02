@@ -7,7 +7,7 @@
         $strings = wp_zillow_bs_strings();
         
         $result = $data->response->url;
-    
+ 
         $template = <<<EOT
             <div role="tabpanel" class="tab-pane" id="wpz-chart">
                 <img src="{$result}" alt="" />

@@ -70,6 +70,9 @@ function wp_zillow_bs_sectioncontent(){
 }
 
 function wpzillowbs_cleanzwsid($zwsid){
+    //TODO
+    //sanitize this somehow
+    //probably just remove <,> i guess
     return $zwsid;
 }
 

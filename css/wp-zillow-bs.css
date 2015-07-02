@@ -28,3 +28,11 @@
 .provided-by-zillow{
     text-align: center;
 }
+
+#wpz-chart{
+    text-align: center;
+}
+
+#wpz-chart img{
+    margin-top:5px;
+}

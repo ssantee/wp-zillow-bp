@@ -25,13 +25,13 @@
             $result = curl_exec($ch);
 
             $ret = $this->parseXML($result);
-            
+          
             return $ret;
             
         }
         
         private function checkErrs($res){
-            
+             
             $err = false;
             $msg = '';
             $serviceErrs = array(1,2,3,4);
@@ -98,6 +98,23 @@
             
         }
         
+        public function getSearchResults($atts){
+            //http://www.zillow.com/webservice/GetSearchResults.htm
+            //$address,$citystatezip,$rentz
+            $address = $atts['address'];
+            $citystatezip = $atts['city']. ',' . $atts['state'] . ' ' . $atts['zip'];
+            $rentz = 'false';
+            
+            $apiurl = 'GetSearchResults.htm?address=' . urlencode($address) . '&citystatezip=' . urlencode($citystatezip) . '&rentzestimate=' . $this->rentz;
+            
+            $result = $this->dohttp($apiurl);
+            
+            $this->zpid = $result->response->results->result->zpid;
+            
+            return $result;
+
+        }
+        
         public function getDeepSearchResults($atts){
             //http://www.zillow.com/webservice/GetDeepSearchResults.htm
             
@@ -124,40 +141,11 @@
             return $this->dohttp($apiurl);
         }
         
-        public function getSearchResults($atts){
-            //http://www.zillow.com/webservice/GetSearchResults.htm
-            //$address,$citystatezip,$rentz
-            $address = $atts['address'];
-            $citystatezip = $atts['city']. ',' . $atts['state'] . ' ' . $atts['zip'];
-            $rentz = 'false';
-            
-            $apiurl = 'GetSearchResults.htm?address=' . urlencode($address) . '&citystatezip=' . urlencode($citystatezip) . '&rentzestimate=' . $this->rentz;
-            
-            $result = $this->dohttp($apiurl);
-            
-            $this->zpid = $result->response->results->result->zpid;
-            
-            return $result;
-
-        }
-        
         public function getChart($atts){
             //http://www.zillow.com/webservice/GetChart.htm
-            $apiurl = 'GetChart.htm?zpid=' . $this->zpid . '&unit-type=dollar&width=200&height=200&chartDuration=5years';
+            $apiurl = 'GetChart.htm?zpid=' . $this->zpid . '&unit-type=dollar&width=400&height=200&chartDuration=5years';
             
-            $result = $this->dohttp($apiurl);
-           
-            $errs = $this->checkErrs($result);
-            
-            if($errs[0]==true){
-                $output = $this->errOutput($errs[1]);
-            }
-            else{
-                require_once('templates/getChart.php');
-                $output = zillow_bs_tGetChart($result);
-            }
-            
-            return $output;
+            return $this->dohttp($apiurl); 
         }
         
         public function getComps($atts){
@@ -175,6 +163,12 @@
         public function getDeepComps($atts){
             //http://www.zillow.com/webservice/GetDeepComps.htm
             $apiurl = 'GetDeepComps.htm?$zpid=' . $this->zpid . '&count=' . $count . '&rentzestimate=' . $this->rentz;
+            return $this->dohttp($apiurl);
+        }
+        
+        public function getNeighborhood($atts){
+        //http://www.zillow.com/webservice/GetDemographics.htm
+            $apiurl = 'GetDemographics.htm?zip=' . $atts['zip'];
             return $this->dohttp($apiurl);
         }
         
@@ -315,8 +309,16 @@
         
         $out .= $zo->applyTemplate('getComps',$data);
         
-        $out = wp_zillow_bs_doAllOuter($out, $searchData);
+        $data = $zo->getChart($atts);
+
+        $out .= $zo->applyTemplate('getChart',$data);
+
+        $data = $zo->getNeighborhood($atts);
+
+        $out .= $zo->applyTemplate('getNeighborhood',$data);
         
+        $out = wp_zillow_bs_doAllOuter($out, $searchData);
+
         //$out = $zo->applyTemplate('sectionHeader',$searchData) . $out;
      
         //getSearchResults or getDeepSearchResults will set the zpid
