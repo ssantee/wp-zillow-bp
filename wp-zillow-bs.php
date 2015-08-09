@@ -45,6 +45,8 @@ $wp_zillow_bs_gotdata = false;
 
 require_once('class.wpzillow.php');
 
+require_once('functions.php');
+
 require_once('wp-zillow-bs-admin.php');
 
 //zwsid

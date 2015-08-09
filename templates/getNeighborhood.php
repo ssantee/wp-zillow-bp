@@ -8,7 +8,7 @@
         
         $result = $data->response->region->id;
     
-        $strings['seeMore'] = str_replace('[address]',$result->address->street,$strings['seeMore']);
+        $strings['seeMore'] = str_replace('[address]',$result->address->street,$strings['seeMore']);        
         
         $template = <<<EOT
             <div role="tabpanel" class="tab-pane" id="wpz-neighborhood">

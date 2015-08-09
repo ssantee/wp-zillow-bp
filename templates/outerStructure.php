@@ -14,8 +14,8 @@
                 <div role="tabpanel">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a href="#wpz-deepsearchresults" aria-controls="wpz-deepsearchresults" role="tab" data-toggle="tab">Home Details By Zillow</a></li>
-                        <li role="presentation"><a href="#wpz-comps" aria-controls="wpz-comps" role="tab" data-toggle="tab">Comparable Recent Sales</a></li>
-                        <li role="presentation"><a href="#wpz-neighborhood" aria-controls="wpz-neighborhood" role="tab" data-toggle="tab">Neighborhood</a></li>
+                        <!--<li role="presentation"><a href="#wpz-comps" aria-controls="wpz-comps" role="tab" data-toggle="tab">Comparable Recent Sales</a></li>
+                        <li role="presentation"><a href="#wpz-neighborhood" aria-controls="wpz-neighborhood" role="tab" data-toggle="tab">Neighborhood</a></li>-->
                     </ul>
                     
                     <div class="tab-content">
@@ -57,7 +57,7 @@ EOT;
                         <li role="presentation" class="active"><a href="#wpz-deepsearchresults" aria-controls="wpz-deepsearchresults" role="tab" data-toggle="tab">Home Details By Zillow</a></li>
                         <li role="presentation"><a href="#wpz-comps" aria-controls="wpz-comps" role="tab" data-toggle="tab">Comparable Recent Sales</a></li>
                         <li role="presentation"><a href="#wpz-chart" aria-controls="wpz-chart" role="tab" data-toggle="tab">Value History</a></li>
-                        <li role="presentation"><a href="#wpz-neighborhood" aria-controls="wpz-neighborhood" role="tab" data-toggle="tab">Neighborhood</a></li>
+                        <!--<li role="presentation"><a href="#wpz-neighborhood" aria-controls="wpz-neighborhood" role="tab" data-toggle="tab">Neighborhood</a></li>-->
                     </ul>
                     
                     <div class="tab-content">
