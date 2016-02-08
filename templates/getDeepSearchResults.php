@@ -9,11 +9,11 @@ important notes from zillow terms
     
 */
 
-    function zillow_bs_tgetDeepSearchResults($data){
+    function zillow_bp_tgetDeepSearchResults($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $strings = wp_zillow_bs_strings();
+        $strings = wp_zillow_bp_strings();
         
         $result = $data->response->results->result;
     
@@ -23,7 +23,7 @@ important notes from zillow terms
             <div role="tabpanel" class="tab-pane row active clearfix" id="wpz-deepsearchresults">
                 
                 
-                <div class="wp-z-bs-section span4 clearfix">
+                <div class="wp-z-bp-section span4 clearfix">
                     <h3>Details</h3>
                     <ul>
                         <li>Type: {$result->useCode}</li>
@@ -37,7 +37,7 @@ important notes from zillow terms
                         <li></li>
                     </ul>
                 </div>
-                <div class="wp-z-bs-section span4 clearfix">
+                <div class="wp-z-bp-section span4 clearfix">
                     <h3>{$strings['zestimate']}</h3>
                     <ul>
                         <li>Amount: \${$result->zestimate->amount}</li>
@@ -51,7 +51,7 @@ important notes from zillow terms
                         </li>
                     </ul>
                 </div>
-                <div class="wp-z-bs-section span4 clearfix">
+                <div class="wp-z-bp-section span4 clearfix">
                     <h3>Local Real Estate</h3>
                     <ul>
                         <li><a target="_blank" href="{$result->localRealEstate->region->links->overview}">
@@ -65,7 +65,7 @@ important notes from zillow terms
                         </li>
                     </ul>
                 </div>
-                <div class="wp-z-bs-section span4 clearfix">
+                <div class="wp-z-bp-section span4 clearfix">
                     <h3>Links</h3>
                     <ul>
                         <li><a href="{$result->links->homedetails}" target="blank">Home Details</a></li>
@@ -74,7 +74,7 @@ important notes from zillow terms
                         <li><a href="{$result->links->comparables}" target="_blank">Comparables</a></li>
                     </ul>
                 </div>
-                <div class="wp-z-bs-section span4 clearfix">
+                <div class="wp-z-bp-section span4 clearfix">
                     <p><a href="{$result->links->homedetails}" target="_blank">{$strings['seeMore']}</a></p>
                 </div>
             </div>
