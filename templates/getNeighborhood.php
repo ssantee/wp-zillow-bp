@@ -1,10 +1,10 @@
 <?php 
 
-    function zillow_bp_tgetNeighborhood($data){
+    function zillow_bs_tgetNeighborhood($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
   
-        $strings = wp_zillow_bp_strings();
+        $strings = wp_zillow_bs_strings();
         
         $result = $data->response->region->id;
     
@@ -12,7 +12,7 @@
         
         $template = <<<EOT
             <div role="tabpanel" class="tab-pane" id="wpz-neighborhood">
-                <div class="wp-z-bp-section span4 clearfix">
+                <div class="wp-z-bs-section span4 clearfix">
                     <h3>Neighborhood {$result}</h3>
                     
                 </div>

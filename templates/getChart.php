@@ -1,10 +1,10 @@
 <?php 
 
-    function zillow_bp_tgetChart($data){
+    function zillow_bs_tgetChart($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $strings = wp_zillow_bp_strings();
+        $strings = wp_zillow_bs_strings();
         
         $result = $data->response->url;
  

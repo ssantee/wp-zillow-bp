@@ -1,6 +1,6 @@
 <?php
 
-function wp_zillow_bp_strings () {
+function wp_zillow_bs_strings () {
 
     $strings = [
 

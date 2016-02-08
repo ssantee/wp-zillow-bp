@@ -1,10 +1,10 @@
 <?php
 
-    function wp_zillowbp_errorTemplate(){
+    function wp_zillowbs_errorTemplate(){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $errStr = WPZILLOWP_ERRSTR;
+        $errStr = WPZILLOWBS_ERRSTR;
         
         $template = <<<EOT
             <h2>Sorry</h2>

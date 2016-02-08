@@ -11,30 +11,30 @@ function atts_are_valid($atts){
     }
 
     function queue_styles(){
-        wp_enqueue_style( 'wp-zillow-bp-css', plugins_url('',__FILE__) . '/css/wp-zillow-bp.css', array(), '1', 'all' );
+        wp_enqueue_style( 'wp-zillow-bs-css', plugins_url('',__FILE__) . '/css/wp-zillow-bs.css', array(), '1', 'all' );
     }
 
-    function wp_zillow_bp_doOuter($template){
+    function wp_zillow_bs_doOuter($template){
     
         require_once('templates/outerStructure.php');
         
-        $global = wp_zillowbp_generalMarkup();
+        $global = wp_zillowbs_generalMarkup();
         
-        return str_replace(WPZILLOWBP_TEMPLATESTR,$template,$global);
+        return str_replace(WPZILLOWBS_TEMPLATESTR,$template,$global);
         
     }
 
-    function wp_zillow_bp_doAllOuter($template, $data){
+    function wp_zillow_bs_doAllOuter($template, $data){
         
         require_once('templates/outerStructure.php');
         
-        $global = wp_zillowbp_tabbedMarkup($data);
+        $global = wp_zillowbs_tabbedMarkup($data);
         
-        return str_replace(WPZILLOWbp_TEMPLATESTR,$template,$global);
+        return str_replace(WPZILLOWBS_TEMPLATESTR,$template,$global);
         
     }
 
-    function wp_zillowbp_shortcodes($atts){
+    function wp_zillowbs_shortcodes($atts){
         //$atts = shortcode attributes
         //[zillow-data method="getSearchResults" city="" state="" zip=""]
         
@@ -53,7 +53,7 @@ function atts_are_valid($atts){
         $zo->init($zwsid);
         
         if($method == 'all'){
-            $allResults = wp_zillowbp_shortcodes_master($atts);
+            $allResults = wp_zillowbs_shortcodes_master($atts);
             
             $out = $allResults['template'];
             
@@ -75,20 +75,20 @@ function atts_are_valid($atts){
             
             $out = $zo->applyTemplate($method, $data);
             
-            $out = wp_zillow_bp_doOuter($out);
+            $out = wp_zillow_bs_doOuter($out);
         }
         
-        global $wp_zillow_bp_gotdata;
+        global $wp_zillow_bs_gotdata;
 
-        $wp_zillow_bp_gotdata = true;
+        $wp_zillow_bs_gotdata = true;
         
         queue_styles();
         
-        return $out; //. wp_zillow_bp_providedby();
+        return $out; //. wp_zillow_bs_providedby();
         
     }
     
-    function wp_zillowbp_shortcodes_master($atts){
+    function wp_zillowbs_shortcodes_master($atts){
     
         $zwsid = get_option('wpzillow_zwsid');
         
@@ -117,7 +117,7 @@ function atts_are_valid($atts){
 
         //$out .= $zo->applyTemplate('getNeighborhood',$data);
         
-        $out = wp_zillow_bp_doAllOuter($out, $searchData);
+        $out = wp_zillow_bs_doAllOuter($out, $searchData);
 
         //$out = $zo->applyTemplate('sectionHeader',$searchData) . $out;
      
@@ -131,15 +131,15 @@ function atts_are_valid($atts){
     
     }
 
-    global $wp_zillow_bp_results;
-    global $wp_zillow_bp_errs;
+    global $wp_zillow_bs_results;
+    global $wp_zillow_bs_errs;
 
-    $wp_zillow_bp_results = '';
-    $wp_zillow_bp_errs = '';
+    $wp_zillow_bs_results = '';
+    $wp_zillow_bs_errs = '';
 
-    function wp_zillowbp_doPropertySearch($content){
+    function wp_zillowbs_doPropertySearch($content){
     
-        if ( !isset($_POST['wp_zillow_bp_search']) ) return;
+        if ( !isset($_POST['wp_zillow_bs_search']) ) return;
         
         //if( !wp_verify_nonce( $_REQUEST['zillowsearch'], 'zillowsearch' ) ){
                 
@@ -149,16 +149,16 @@ function atts_are_valid($atts){
         
         $err = '';
         
-        global $wp_zillow_bp_results;
+        global $wp_zillow_bs_results;
         
-        global $wp_zillow_bp_errs;
+        global $wp_zillow_bs_errs;
         
-        $address  = ( isset($_POST['wp_zillow_bp_address']) )  ? trim(strip_tags($_POST['wp_zillow_bp_address'])) : null;
-        $city = ( isset($_POST['wp_zillow_bp_city']) )  ? trim(strip_tags($_POST['wp_zillow_bp_city'])) : null;
-        $zip = ( isset($_POST['wp_zillow_bp_zip']) )  ? trim(strip_tags($_POST['wp_zillow_bp_zip'])) : null;
+        $address  = ( isset($_POST['wp_zillow_bs_address']) )  ? trim(strip_tags($_POST['wp_zillow_bs_address'])) : null;
+        $city = ( isset($_POST['wp_zillow_bs_city']) )  ? trim(strip_tags($_POST['wp_zillow_bs_city'])) : null;
+        $zip = ( isset($_POST['wp_zillow_bs_zip']) )  ? trim(strip_tags($_POST['wp_zillow_bs_zip'])) : null;
         
         if($address == '' || $city == '' || $zip == ''){
-            $wp_zillow_bp_errs = 'Address, City, and ZIP Code are required to search Zillow.';
+            $wp_zillow_bs_errs = 'Address, City, and ZIP Code are required to search Zillow.';
         }
         else{
             $data = array(
@@ -169,41 +169,41 @@ function atts_are_valid($atts){
                 'zip' => $zip
             );
 
-            $wp_zillow_bp_results = wp_zillowbp_shortcodes($data);
+            $wp_zillow_bs_results = wp_zillowbs_shortcodes($data);
             
-            global $wp_zillow_bp_gotdata;
+            global $wp_zillow_bs_gotdata;
 
-            $wp_zillow_bp_gotdata = true;
+            $wp_zillow_bs_gotdata = true;
         }
     }
 
-    function wp_zillowbp_showPropertySearch(){
+    function wp_zillowbs_showPropertySearch(){
         
-        global $wp_zillow_bp_results;
+        global $wp_zillow_bs_results;
         
-        echo ( $wp_zillow_bp_results );
+        echo ( $wp_zillow_bs_results );
         
     }
 
-    function wp_zillowbp_showSearchErrors(){
+    function wp_zillowbs_showSearchErrors(){
         
-        global $wp_zillow_bp_errs;
-        if($wp_zillow_bp_errs != ''){
+        global $wp_zillow_bs_errs;
+        if($wp_zillow_bs_errs != ''){
             require_once('templates/errTemplate.php');
         
-            echo ( str_replace(WPZILLOWBP_ERRSTR,$wp_zillow_bp_errs,wp_zillowbp_errorTemplate()) );
+            echo ( str_replace(WPZILLOWBS_ERRSTR,$wp_zillow_bs_errs,wp_zillowbs_errorTemplate()) );
         }
     }
 
-    function wp_zillow_bp_footer(){
+    function wp_zillow_bs_footer(){
         $out = '';
         
-        global $wp_zillow_bp_gotdata;
+        global $wp_zillow_bs_gotdata;
         
-        if($wp_zillow_bp_gotdata){
+        if($wp_zillow_bs_gotdata){
             require_once('templates/outerStructure.php');
             
-            $out = wp_zillow_bp_global_footer();
+            $out = wp_zillow_bs_global_footer();
             
         }
         
