@@ -4,7 +4,7 @@
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $errStr = WPZILLOWP_ERRSTR;
+        $errStr = WPZILLOWBP_ERRSTR;
         
         $template = <<<EOT
             <h2>Sorry</h2>
