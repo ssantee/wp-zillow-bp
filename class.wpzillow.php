@@ -55,7 +55,7 @@
         }
         
         private function errOutput($err){
-            return str_replace(WPZILLOWBS_ERRSTR,$err,$this->errTemplate);
+            return str_replace(WPZILLOWBP_ERRSTR,$err,$this->errTemplate);
         }
         
         public function setZpid($atts){
@@ -87,7 +87,7 @@
                 $output = $this->errOutput($errs[1]);
             }
             else{
-                $templateFunction = 'zillow_bs_t' . $template;
+                $templateFunction = 'zillow_bp_t' . $template;
                 
                 require_once('templates/'.$template.'.php');
                 
@@ -190,11 +190,11 @@
             
             require_once('templates/errTemplate.php');
             
-            $this->errTemplate = wp_zillowbs_errorTemplate();
+            $this->errTemplate = wp_zillowbp_errorTemplate();
             
             require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
             
-            $this->strings = wp_zillow_bs_strings();
+            $this->strings = wp_zillow_bp_strings();
             
         }
         

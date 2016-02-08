@@ -1,12 +1,12 @@
 <?php
         
-    function wp_zillowbs_generalMarkup(){
+    function wp_zillowbp_generalMarkup(){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $templatestr = WPZILLOWBS_TEMPLATESTR;
+        $templatestr = WPZILLOWBP_TEMPLATESTR;
         
-        $provBy = wp_zillow_bs_providedby();
+        $provBy = wp_zillow_bp_providedby();
         
         $template = <<<EOT
             <section class="zillow-data">
@@ -29,18 +29,18 @@ EOT;
         return $template;
     }
 
-    function wp_zillowbs_tabbedMarkup($data){
+    function wp_zillowbp_tabbedMarkup($data){
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $templatestr = WPZILLOWBS_TEMPLATESTR;
+        $templatestr = WPZILLOWBP_TEMPLATESTR;
         
-        $provBy = wp_zillow_bs_providedby();
+        $provBy = wp_zillow_bp_providedby();
 
         $result = $data->response->results->result;
       
         $template = <<<EOT
             <section class="zillow-data">
-                <div class="wp-z-bs-section clearfix">
+                <div class="wp-z-bp-section clearfix">
                     
                     <p>
                         Zillow Details for 
@@ -71,15 +71,15 @@ EOT;
         return $template;
     }
 
-    function wp_zillow_bs_providedby(){
+    function wp_zillow_bp_providedby(){
         return '<p class="provided-by-zillow"><a href="http://www.zillow.com" target="_blank"><img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_150x40_rounded.gif" width="150" height="40" alt="Zillow Real Estate Search" /></a></p>';
     }
 
-    function wp_zillow_bs_global_footer(){
+    function wp_zillow_bp_global_footer(){
         
-        global $wp_zillow_bs_gotdata;
+        global $wp_zillow_bp_gotdata;
         
-        if($wp_zillow_bs_gotdata){
+        if($wp_zillow_bp_gotdata){
             return '<p class="zillow_required">&copy; Zillow, Inc., 2006-2014. Use is subject to <a href="" target="_blank">Terms of Use</a> | <a href="" target="_blank">What\'s a Zestimate?</a></p>';
         }
         else{

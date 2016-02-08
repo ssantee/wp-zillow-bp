@@ -1,10 +1,10 @@
 <?php 
 
-    function zillow_bs_tgetComps($data){
+    function zillow_bp_tgetComps($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $strings = wp_zillow_bs_strings();
+        $strings = wp_zillow_bp_strings();
         
         $result = $data->response->properties->comparables;
    
@@ -16,7 +16,7 @@
         
         $template .= <<<EOT
             <div role="tabpanel" class="tab-pane" id="wpz-comps">
-                <div class="wp-z-bs-section span4 clearfix">
+                <div class="wp-z-bp-section span4 clearfix">
                     <h3>Zillow Comparable Recent Sales</h3>
                     <p>
                         {$comp->address->street}<br>

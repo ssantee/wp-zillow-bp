@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: wp-zillow-bs
+Plugin Name: wp-zillow-bp
 Description: zillow api integration for wordpress
 Version: 1.0
 Author: Steven Santee
@@ -34,12 +34,12 @@ define( 'WPZILLOW__MINIMUM_WP_VERSION', '3.1' );
 define( 'WPZILLOW__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPZILLOW__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
-define( 'WPZILLOWBS_TEMPLATESTR', '{{zillowdata}}');
-define( 'WPZILLOWBS_ERRSTR', '{{zillowerr}}');
+define( 'WPZILLOWBP_TEMPLATESTR', '{{zillowdata}}');
+define( 'WPZILLOWBP_ERRSTR', '{{zillowerr}}');
 
-global $wp_zillow_bs_gotdata;
+global $wp_zillow_bp_gotdata;
 
-$wp_zillow_bs_gotdata = false;
+$wp_zillow_bp_gotdata = false;
 
 //register_activation_hook( __FILE__, 'init' );
 
@@ -47,21 +47,21 @@ require_once('class.wpzillow.php');
 
 require_once('functions.php');
 
-require_once('wp-zillow-bs-admin.php');
+require_once('wp-zillow-bp-admin.php');
 
 //zwsid
 //X1-ZWz1e1v29k9jwr_7q4l5
  
-function wp_zillowbs_register_shortcode() {
-    add_shortcode( 'zillow-data', 'wp_zillowbs_shortcodes' );
+function wp_zillowbp_register_shortcode() {
+    add_shortcode( 'zillow-data', 'wp_zillowbp_shortcodes' );
 }
 
 //[zillow-data method="getSearchResults" city="" state="" zip=""]
-add_action( 'init', 'wp_zillowbs_register_shortcode' );
-add_action( 'init', 'wp_zillowbs_doPropertySearch' );
+add_action( 'init', 'wp_zillowbp_register_shortcode' );
+add_action( 'init', 'wp_zillowbp_doPropertySearch' );
 
 
 
-add_action( 'wp_footer', 'wp_zillow_bs_footer' );
+add_action( 'wp_footer', 'wp_zillow_bp_footer' );
 
 ?>

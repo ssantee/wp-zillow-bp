@@ -1,6 +1,6 @@
 <?php
 
-   function wp_zillow_bs_admin_callback(){
+   function wp_zillow_bp_admin_callback(){
     if ( !current_user_can( 'manage_options' ) )  {
         wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
@@ -44,32 +44,32 @@
 <?php
 }
 
-function wp_zillowbs_adminmenu(){
+function wp_zillowbp_adminmenu(){
 
     add_options_page( 
         'WP Zillow Options', 
         'WP Zillow', 
         'manage_options', 
-        'wp-zillow-bs-admin', 
-        'wp_zillow_bs_admin_callback' );
+        'wp-zillow-bp-admin', 
+        'wp_zillow_bp_admin_callback' );
 
 }
 
-add_action( 'admin_menu', 'wp_zillowbs_adminmenu' );
+add_action( 'admin_menu', 'wp_zillowbp_adminmenu' );
 
-function wpzillowbs_input(){
+function wpzillowbp_input(){
 
     echo('<input id="wpzillow_zwsid" name="wpzillow_zwsid" value="" />');
 
 }
 
-function wp_zillow_bs_sectioncontent(){
+function wp_zillow_bp_sectioncontent(){
 
     echo('<h1>Settings - Zillow</h1>');
     
 }
 
-function wpzillowbs_cleanzwsid($zwsid){
+function wpzillowbp_cleanzwsid($zwsid){
     //TODO
     //sanitize this somehow
     //probably just remove <,> i guess
@@ -79,10 +79,10 @@ function wpzillowbs_cleanzwsid($zwsid){
 function wpzillow_register_setting(){
     
     add_settings_section(
-        'wp_zillow_bs_section',
+        'wp_zillow_bp_section',
         'WP Zillow Settings',
-        'wp_zillow_bs_sectioncontent',
-        'wp-zillow-bs-admin'
+        'wp_zillow_bp_sectioncontent',
+        'wp-zillow-bp-admin'
     );
     
     //add_settings_field( $id, $title, $callback, $page, $section = 'default', $args = array() )
@@ -90,12 +90,12 @@ function wpzillow_register_setting(){
     add_settings_field( 
         'wpzillow_zwsid',//$id, 
         'ZWSID',//$title, 
-        'wpzillowbs_input',//$callback, 
-        'wp-zillow-bs-admin',//page 
+        'wpzillowbp_input',//$callback, 
+        'wp-zillow-bp-admin',//page 
         'default', 
         array() );
 
-    register_setting( 'wp-zillow-bs-admin', 'wpzillow_zwsid', 'wpzillowbs_cleanzwsid' );
+    register_setting( 'wp-zillow-bp-admin', 'wpzillow_zwsid', 'wpzillowbp_cleanzwsid' );
 }
 
 add_action( 'admin_init', 'wpzillow_register_setting' );

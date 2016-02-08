@@ -9,11 +9,11 @@ important notes from zillow terms
     
 */
 
-    function zillow_bs_tgetSearchResults($data){
+    function zillow_bp_tgetSearchResults($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $strings = wp_zillow_bs_strings();
+        $strings = wp_zillow_bp_strings();
         
         $result = $data->response->results->result;
     

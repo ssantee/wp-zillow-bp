@@ -1,16 +1,16 @@
 <?php 
 
-    function zillow_bs_tsectionHeader($data){
+    function zillow_bp_tsectionHeader($data){
         
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
-        $strings = wp_zillow_bs_strings();
+        $strings = wp_zillow_bp_strings();
         
         $result = $data->response->results->result;
         
         $template = <<<EOT
             
-                <div class="wp-z-bs-section clearfix">
+                <div class="wp-z-bp-section clearfix">
                     
                     <p>
                         Zillow Details for 
