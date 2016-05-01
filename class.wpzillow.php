@@ -12,7 +12,7 @@
         
         function buildUrl($args){
             
-            $urlPrefix = $this->$zillow_endpoint;
+            $urlPrefix = $this->zillow_endpoint;
             
             return $urlPrefix . $args . '&zws-id=' . $this->zwsid;
             
@@ -38,8 +38,8 @@
              
             $err = false;
             $msg = '';
-            $serviceErrs = $this->$serviceerrs;
-            $inputErrs = $this->$httperrs;
+            $serviceErrs = $this->serviceerrs;
+            $inputErrs = $this->httperrs;
             $resCode = $res->message->code;
             
             if(in_array($resCode,$serviceErrs)){
