@@ -2,17 +2,23 @@
     
     function atts_are_valid($atts){
     
-        /*
-            TODO extend this function, or write another, to validate
-            that method exists before being called on wpzillow object
-        */
-    
         if(!isset($atts['address']) || !isset($atts['city']) || !isset($atts['state']) || !isset($atts['zip'])){
             return false;
         }
         else{
             return true;
         }
+    }
+
+    function method_is_valid($zo, $method){
+        
+        if( $method == 'all' || method_exists($zo, $method) ){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
     }
 
     function queue_styles(){
@@ -50,16 +56,16 @@
         
         $zwsid = get_option('wpzillow_zwsid');
         
-        if(!$zwsid || !atts_are_valid($atts)){
-            exit;
-        }
-        
         require_once('templates/errTemplate.php');
         require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
         
         $zo = new wpzillow($zwsid, wp_zillowbp_errorTemplate(), wp_zillow_bp_strings());
         //removed init, made it constructor
         //$zo->init($zwsid);
+        
+        if(!$zwsid || !atts_are_valid($atts) || !method_is_valid($zo, $method)){
+            exit;
+        }
         
         if($method == 'all'){
             
@@ -74,9 +80,9 @@
         else if($method !== 'getSearchResults' && $method !== 'getDeepSearchResults'){
             //must get zpid first
             $zo->setZpid($atts);
-            
+        
             $data = $zo->$method($atts);
-            
+        
             $out = $zo->applyTemplate($method, $data);
             
         }
