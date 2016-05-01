@@ -2,13 +2,17 @@
     
     class wpzillow{
         
+        private $httperrs = array(500,501,502,503,504,505,506,507,508);
+        private $serviceerrs = array(1,2,3,4);
+        private $zillow_endpoint = 'http://www.zillow.com/webservice/';
+        
         function parseXML($res){
             return simplexml_load_string($res);
         }
         
         function buildUrl($args){
             
-            $urlPrefix = 'http://www.zillow.com/webservice/';
+            $urlPrefix = $this->$zillow_endpoint;
             
             return $urlPrefix . $args . '&zws-id=' . $this->zwsid;
             
@@ -34,20 +38,22 @@
              
             $err = false;
             $msg = '';
-            $serviceErrs = array(1,2,3,4);
-            $inputErrs = array(500,501,502,503,504,505,506,507,508);
+            $serviceErrs = $this->$serviceerrs;
+            $inputErrs = $this->$httperrs;
             $resCode = $res->message->code;
             
             if(in_array($resCode,$serviceErrs)){
                 //zillow service interruption
                 
                 $err = true;
-                $msg = 'zillow service not available';
+                $msg = $this->strings['serviceunavailable'];
                 
             }
             if(in_array($resCode,$inputErrs)){
+                
                 $err = true;
-                $msg = 'invalid search or no results';
+                $msg = $this->strings['invalidsearch'];
+                
             }
             
             return [$err,$msg];
@@ -65,6 +71,7 @@
         }
         
         private function getZpid($atts){
+            
             $address = $atts['address'];
             $citystatezip = $atts['city']. ',' . $atts['state'] . ' ' . $atts['zip'];
             $rentz = 'false';
@@ -75,6 +82,7 @@
             $result = $this->dohttp($apiurl);
             
             return $result->response->results->result->zpid;
+            
         }
         
         public function applyTemplate($template, $data){
@@ -99,6 +107,7 @@
         }
         
         public function getSearchResults($atts){
+            
             //http://www.zillow.com/webservice/GetSearchResults.htm
             //$address,$citystatezip,$rentz
             $address = $atts['address'];
@@ -116,6 +125,7 @@
         }
         
         public function getDeepSearchResults($atts){
+            
             //http://www.zillow.com/webservice/GetDeepSearchResults.htm
             
             $address = $atts['address'];
@@ -135,20 +145,25 @@
         }
         
         public function getZestimate($atts){
+            
             //http://www.zillow.com/webservice/GetZestimate.htm
             
             $apiurl = 'GetZestimate.htm?zpid=' . $this->zpid . '&rentzestimate=' . $this->rentz;
             return $this->dohttp($apiurl);
+            
         }
         
         public function getChart($atts){
+            
             //http://www.zillow.com/webservice/GetChart.htm
             $apiurl = 'GetChart.htm?zpid=' . $this->zpid . '&unit-type=dollar&width=400&height=200&chartDuration=5years';
             
-            return $this->dohttp($apiurl); 
+            return $this->dohttp($apiurl);
+             
         }
         
         public function getComps($atts){
+            
             //http://www.zillow.com/webservice/GetComps.htm
             $count = $this->compCount;
             
@@ -161,24 +176,30 @@
         }
         
         public function getDeepComps($atts){
+            
             //http://www.zillow.com/webservice/GetDeepComps.htm
             $apiurl = 'GetDeepComps.htm?$zpid=' . $this->zpid . '&count=' . $count . '&rentzestimate=' . $this->rentz;
             return $this->dohttp($apiurl);
+            
         }
         
         public function getNeighborhood($atts){
-        //http://www.zillow.com/webservice/GetDemographics.htm
+            
+            //http://www.zillow.com/webservice/GetDemographics.htm
             $apiurl = 'GetDemographics.htm?zip=' . $atts['zip'];
             return $this->dohttp($apiurl);
+            
         }
         
         public function getUpdatedPropertyDetails($zpid){
+            
             //http://www.zillow.com/webservice/GetUpdatedPropertyDetails.htm
             $apiurl = 'GetUpdatedPropertyDetails.htm?zpid=' . $this->zpid;
             return $this->dohttp($apiurl);
+            
         }
         
-        public function init($wsid){
+        function __construct($wsid, $errtemplate, $strings){
             
             $this->zwsid = $wsid;
             
@@ -188,13 +209,9 @@
             
             $this->rentz = 'false';
             
-            require_once('templates/errTemplate.php');
+            $this->errTemplate = $errtemplate;
             
-            $this->errTemplate = wp_zillowbp_errorTemplate();
-            
-            require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
-            
-            $this->strings = wp_zillow_bp_strings();
+            $this->strings = $strings;
             
         }
         
