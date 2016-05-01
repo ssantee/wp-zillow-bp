@@ -16,7 +16,7 @@
         
         $template .= <<<EOT
             <div role="tabpanel" class="tab-pane" id="wpz-comps">
-                <div class="wp-z-bp-section span4 clearfix">
+                <div class="wp-z-bp-section clearfix">
                     <h3>Zillow Comparable Recent Sales</h3>
                     <p>
                         {$comp->address->street}<br>

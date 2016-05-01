@@ -12,7 +12,7 @@
         
         $template = <<<EOT
             <div role="tabpanel" class="tab-pane" id="wpz-neighborhood">
-                <div class="wp-z-bp-section span4 clearfix">
+                <div class="wp-z-bp-section clearfix">
                     <h3>Neighborhood {$result}</h3>
                     
                 </div>
