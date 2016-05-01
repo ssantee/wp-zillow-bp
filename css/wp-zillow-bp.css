@@ -36,3 +36,27 @@
 #wpz-chart img{
     margin-top:5px;
 }
+
+.wp-z-bp-section{
+    float:left;
+}
+
+.details,.zestimate{
+    width: 30%;
+}
+
+.localrealestate,.zillowlinks{
+    width: 100%;
+}
+
+@media(max-width:767px){
+    .details,.zestimate{
+        width: 100%;
+    }
+}
+
+@media(max-width:600px){
+    .zillow-data .nav li{
+        width: 100%;
+    }
+}
