@@ -20,8 +20,7 @@
                     <h3>Zillow Comparable Recent Sales</h3>
                     <p>
                         {$comp->address->street}<br>
-                        {$comp->address->city}<br>
-                        {$comp->address->state}
+                        {$comp->address->city} {$comp->address->state}<br>
                     </p>
                     <ul>
                         <li>{$strings['zestimate']}: \${$comp->zestimate->amount}</li>
