@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: wp-zillow-bp
-Description: zillow api integration for wordpress
+Description: Zillow api integration for wordpress. Enter your Zillow web service ID in Settings -> WP Zillow.
 Version: 1.0
 Author: Steven Santee
 License: GPL2
@@ -41,17 +41,12 @@ global $wp_zillow_bp_gotdata;
 
 $wp_zillow_bp_gotdata = false;
 
-//register_activation_hook( __FILE__, 'init' );
-
 require_once('class.wpzillow.php');
 
 require_once('functions.php');
 
 require_once('wp-zillow-bp-admin.php');
 
-//zwsid
-//X1-ZWz1e1v29k9jwr_7q4l5
- 
 function wp_zillowbp_register_shortcode() {
     add_shortcode( 'zillow-data', 'wp_zillowbp_shortcodes' );
 }
