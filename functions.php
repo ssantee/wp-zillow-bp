@@ -1,6 +1,11 @@
 <?php
     
-function atts_are_valid($atts){
+    function atts_are_valid($atts){
+    
+        /*
+            TODO extend this function, or write another, to validate
+            that method exists before being called on wpzillow object
+        */
     
         if(!isset($atts['address']) || !isset($atts['city']) || !isset($atts['state']) || !isset($atts['zip'])){
             return false;
@@ -49,11 +54,16 @@ function atts_are_valid($atts){
             exit;
         }
         
-        $zo = new wpzillow();
-        $zo->init($zwsid);
+        require_once('templates/errTemplate.php');
+        require_once(WPZILLOW__PLUGIN_DIR . '/language.php');
+        
+        $zo = new wpzillow($zwsid, wp_zillowbp_errorTemplate(), wp_zillow_bp_strings());
+        //removed init, made it constructor
+        //$zo->init($zwsid);
         
         if($method == 'all'){
-            $allResults = wp_zillowbp_shortcodes_master($atts);
+            
+            $allResults = wp_zillowbp_shortcodes_master($atts, $zo, $zwsid);
             
             $out = $allResults['template'];
             
@@ -88,13 +98,8 @@ function atts_are_valid($atts){
         
     }
     
-    function wp_zillowbp_shortcodes_master($atts){
+    function wp_zillowbp_shortcodes_master($atts, $zo, $zwsid){
     
-        $zwsid = get_option('wpzillow_zwsid');
-        
-        $zo = new wpzillow();
-        $zo->init($zwsid);
-        
         $data;
         $out = '';
         
@@ -139,7 +144,7 @@ function atts_are_valid($atts){
 
     function wp_zillowbp_doPropertySearch($content){
     
-        if ( !isset($_POST['wp_zillow_bp_search']) ) return;
+        if ( !isset( $_POST['wp_zillow_bp_search'] ) ) return;
         
         //if( !wp_verify_nonce( $_REQUEST['zillowsearch'], 'zillowsearch' ) ){
                 
@@ -153,12 +158,16 @@ function atts_are_valid($atts){
         
         global $wp_zillow_bp_errs;
         
+        require_once('language.php');
+        
+        $strings = wp_zillow_bp_strings();
+        
         $address  = ( isset($_POST['wp_zillow_bp_address']) )  ? trim(strip_tags($_POST['wp_zillow_bp_address'])) : null;
         $city = ( isset($_POST['wp_zillow_bp_city']) )  ? trim(strip_tags($_POST['wp_zillow_bp_city'])) : null;
         $zip = ( isset($_POST['wp_zillow_bp_zip']) )  ? trim(strip_tags($_POST['wp_zillow_bp_zip'])) : null;
         
         if($address == '' || $city == '' || $zip == ''){
-            $wp_zillow_bp_errs = 'Address, City, and ZIP Code are required to search Zillow.';
+            $wp_zillow_bp_errs = $strings['errroraddress'];
         }
         else{
             $data = array(
@@ -188,10 +197,13 @@ function atts_are_valid($atts){
     function wp_zillowbp_showSearchErrors(){
         
         global $wp_zillow_bp_errs;
+        
         if($wp_zillow_bp_errs != ''){
+            
             require_once('templates/errTemplate.php');
         
             echo ( str_replace(WPZILLOWBP_ERRSTR,$wp_zillow_bp_errs,wp_zillowbp_errorTemplate()) );
+        
         }
     }
 
