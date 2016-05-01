@@ -35,7 +35,7 @@
         
         $global = wp_zillowbp_tabbedMarkup($data);
         
-        return str_replace(WPZILLOWbp_TEMPLATESTR,$template,$global);
+        return str_replace(WPZILLOWBP_TEMPLATESTR,$template,$global);
         
     }
 
