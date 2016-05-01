@@ -10,6 +10,10 @@
     }
     else{
         
+        if( !check_admin_referer( 'update_zwsid' ) ){
+            wp_die( __( 'Something went wrong. Please try again.' ) );
+        }
+        
         $updated = update_option('wpzillow_zwsid', sanitize_text_field($_REQUEST['wpzillow_zwsid']));
         
     }
@@ -31,6 +35,7 @@
                               <table class="form-table">
                                    <tr valign="top"><th scope="row"><?php echo('Enter you Zillow Web Service ID') ?></th>
                                         <td>
+                                            <?php echo(wp_nonce_field( 'update_zwsid' )) ?>
                                             <input id="wpzillow_zwsid" name="wpzillow_zwsid" value="<?php echo($current_zwsid) ?>" /> 
                                             <input type="submit" name="submit" value="Submit" />
                                         </td>
@@ -70,10 +75,9 @@ function wp_zillow_bp_sectioncontent(){
 }
 
 function wpzillowbp_cleanzwsid($zwsid){
-    //TODO
-    //sanitize this somehow
-    //probably just remove <,> i guess
-    return $zwsid;
+    
+    return sanitize_text_field($zwsid);
+    
 }
 
 function wpzillow_register_setting(){
