@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Blupixel Zillow API for WP
-Description: Zillow api integration for wordpress. Enter your Zillow web service ID in Settings -> WP Zillow.
+Description: Zillow api integration for wordpress. Enter your Zillow web service ID in Settings -> WP Zillow. Be sure to follow Zillow branding guidelines found here: http://www.zillow.com/howto/api/BrandingRequirements.htm. 
 Version: 1.0
 Author: Steven Santee
 License: GPL2
